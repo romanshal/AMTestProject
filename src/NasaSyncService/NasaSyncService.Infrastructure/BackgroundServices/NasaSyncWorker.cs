@@ -9,8 +9,6 @@ using NasaSyncService.Infrastructure.Hash;
 using NasaSyncService.Infrastructure.Settings;
 using System.Net;
 using System.Net.Http.Headers;
-using System.Security.Cryptography;
-using System.Text;
 using System.Text.Json;
 
 namespace NasaSyncService.Infrastructure.BackgroundServices
@@ -185,7 +183,7 @@ namespace NasaSyncService.Infrastructure.BackgroundServices
                 YearUtc = item.TryGetProperty("year", out var year) ? DateTimeOffset.Parse(year.GetString()!) : null,
                 Reclat = item.TryGetProperty("reclat", out var lat) ? double.Parse(lat.GetString()!) : null,
                 Reclong = item.TryGetProperty("reclong", out var lng) ? double.Parse(lng.GetString()!) : null,
-                //Extra = item.GetRawText(),
+                Extra = ExtractExtra(item),
                 RecordHash = recordHash
             };
 
@@ -203,7 +201,7 @@ namespace NasaSyncService.Infrastructure.BackgroundServices
             entity.YearUtc = item.TryGetProperty("year", out var year) ? DateTimeOffset.Parse(year.GetString()!) : null;
             entity.Reclat = item.TryGetProperty("reclat", out var lat) ? double.Parse(lat.GetString()!) : null;
             entity.Reclong = item.TryGetProperty("reclong", out var lng) ? double.Parse(lng.GetString()!) : null;
-            //entity.Extra = item.GetRawText();
+            entity.Extra = ExtractExtra(item);
             entity.RecordHash = recordHash;
 
             entity.GeoLocations.Clear();
@@ -234,6 +232,23 @@ namespace NasaSyncService.Infrastructure.BackgroundServices
             }
 
             return geoLocations;
+        }
+
+        private static string? ExtractExtra(JsonElement item)
+        {
+            var extra = new Dictionary<string, JsonElement>();
+
+            foreach (var prop in item.EnumerateObject())
+            {
+                if (prop.Name.StartsWith(":@"))
+                {
+                    extra[prop.Name] = prop.Value;
+                }
+            }
+
+            return extra.Count > 0
+                ? JsonSerializer.Serialize(extra)
+                : null;
         }
     }
 }
