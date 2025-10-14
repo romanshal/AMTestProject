@@ -5,7 +5,7 @@ using NasaSyncService.Infrastructure.Data.Contexts;
 
 namespace NasaSyncService.Infrastructure.Repositories
 {
-    internal class MeteoriteRepository(
+    public class MeteoriteRepository(
         NasaDbContext context) : IMeteoriteRepository
     {
         private readonly NasaDbContext _context = context;

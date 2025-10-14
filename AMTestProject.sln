@@ -21,6 +21,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "frontend", "frontend", "{C8
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "Angular.Client", "frontend\Angular.Client\Angular.Client.esproj", "{08E599C2-3E8B-E618-53DD-EA8F90551A5C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NasaSyncService.Test.Units", "test\NasaSyncService.Test.Units\NasaSyncService.Test.Units.csproj", "{978BD9FE-4E96-41F9-9F00-4FCF849F745F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,6 +55,10 @@ Global
 		{08E599C2-3E8B-E618-53DD-EA8F90551A5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{08E599C2-3E8B-E618-53DD-EA8F90551A5C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{08E599C2-3E8B-E618-53DD-EA8F90551A5C}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{978BD9FE-4E96-41F9-9F00-4FCF849F745F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{978BD9FE-4E96-41F9-9F00-4FCF849F745F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{978BD9FE-4E96-41F9-9F00-4FCF849F745F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{978BD9FE-4E96-41F9-9F00-4FCF849F745F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -64,6 +70,7 @@ Global
 		{0A635553-3085-45E7-909D-4AEFB8D8B070} = {2E38F6DF-47F9-4B24-8E3B-4E70CEC736EE}
 		{3476E24E-C9B0-4E0C-B08D-7427AD93D542} = {2E38F6DF-47F9-4B24-8E3B-4E70CEC736EE}
 		{08E599C2-3E8B-E618-53DD-EA8F90551A5C} = {C81610ED-49D5-4F30-AF73-90EA26C3370E}
+		{978BD9FE-4E96-41F9-9F00-4FCF849F745F} = {2E38F6DF-47F9-4B24-8E3B-4E70CEC736EE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7DA82DA7-347B-4FE7-8F27-C91C61CBDB57}

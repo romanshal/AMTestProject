@@ -4,7 +4,7 @@ using NasaSyncService.Infrastructure.Data.Entities;
 
 namespace NasaSyncService.Infrastructure.Mappings
 {
-    internal class RecclassProfile : Profile
+    public class RecclassProfile : Profile
     {
         public RecclassProfile()
         {

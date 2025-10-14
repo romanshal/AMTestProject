@@ -7,7 +7,7 @@ using NasaSyncService.Infrastructure.Data.Contexts;
 
 namespace NasaSyncService.Infrastructure.Repositories
 {
-    internal class RecclassRepository(
+    public class RecclassRepository(
         NasaDbContext context,
         IMapper mapper) : IRecclassRepository
     {
