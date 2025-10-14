@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EFCore.BulkExtensions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -83,14 +84,19 @@ namespace NasaSyncService.Infrastructure.BackgroundServices
                 var items = JsonSerializer.Deserialize<List<JsonElement>>(json)!;
                 snapshot.FetchedCount = items.Count;
 
-                // Download all recclasses
+                // Recclass cache
                 var recclasses = await db.Recclasses
                     .ToDictionaryAsync(r => r.RecclassName, r => r, cancellationToken);
+
+                var newRecclasses = new List<Recclass>();
 
                 var ids = items.Select(i => i.GetProperty("id").GetString()!).ToList();
                 var existing = await db.Meteorites
                     .Where(m => ids.Contains(m.MetioriteId))
                     .ToDictionaryAsync(m => m.MetioriteId, cancellationToken);
+
+                var toInsert = new List<Meteorite>();
+                var toUpdate = new List<Meteorite>();
 
                 foreach (var item in items)
                 {
@@ -98,36 +104,45 @@ namespace NasaSyncService.Infrastructure.BackgroundServices
                     var recordHash = hasher.ComputeHash(item.GetRawText());
 
                     var recclassName = item.TryGetProperty("recclass", out var rc) ? rc.GetString()! : "Unknown";
-                    var recclassId = EnsureRecclass(recclasses, db, recclassName);
+                    var recclassId = EnsureRecclass(recclasses, newRecclasses, recclassName);
 
                     if (!existing.TryGetValue(id, out var entity))
                     {
-                        // INSERT
-                        entity = MapMeteorite(item, recclassId, recordHash);
-                        db.Meteorites.Add(entity);
+                        toInsert.Add(MapMeteorite(item, recclassId, recordHash));
                         snapshot.InsertedCount++;
                     }
                     else if (entity.RecordHash != recordHash)
                     {
-                        // UPDATE
                         UpdateMeteorite(entity, item, recclassId, recordHash);
                         entity.UpdatedAt = DateTimeOffset.UtcNow;
+                        toUpdate.Add(entity);
                         snapshot.UpdatedCount++;
                     }
                 }
 
-                // Soft-delete
-                var currentIds = ids.ToHashSet();
-                var toDelete = await db.Meteorites
-                    .Where(m => !currentIds.Contains(m.MetioriteId) && !m.IsDeleted)
-                    .ToListAsync(cancellationToken);
-
-                foreach (var m in toDelete)
+                // Сначала вставляем новые справочники
+                if (newRecclasses.Count > 0)
                 {
-                    m.IsDeleted = true;
-                    m.DeletedAt = DateTimeOffset.UtcNow;
-                    snapshot.SoftDeletedCount++;
+                    await db.BulkInsertAsync(newRecclasses, cancellationToken: cancellationToken);
                 }
+
+                // Теперь вставляем/обновляем метеориты
+                if (toInsert.Count > 0)
+                    await db.BulkInsertAsync(toInsert, cancellationToken: cancellationToken);
+
+                if (toUpdate.Count > 0)
+                    await db.BulkUpdateAsync(toUpdate, cancellationToken: cancellationToken);
+
+                // Soft-delete (одним UPDATE)
+                var currentIds = ids.ToHashSet();
+                var deletedCount = await db.Meteorites
+                    .Where(m => !currentIds.Contains(m.MetioriteId) && !m.IsDeleted)
+                    .ExecuteUpdateAsync(s => s
+                        .SetProperty(m => m.IsDeleted, _ => true)
+                        .SetProperty(m => m.DeletedAt, _ => DateTimeOffset.UtcNow),
+                        cancellationToken);
+
+                snapshot.SoftDeletedCount = deletedCount;
 
                 snapshot.Status = true;
                 snapshot.FinishedAt = DateTimeOffset.UtcNow;
@@ -149,9 +164,9 @@ namespace NasaSyncService.Infrastructure.BackgroundServices
         }
 
         private static Guid EnsureRecclass(
-            Dictionary<string, Recclass> cache,
-            NasaDbContext db,
-            string recclassName)
+        Dictionary<string, Recclass> cache,
+        List<Recclass> newRecclasses,
+        string recclassName)
         {
             if (string.IsNullOrWhiteSpace(recclassName))
                 recclassName = "Unknown";
@@ -163,8 +178,8 @@ namespace NasaSyncService.Infrastructure.BackgroundServices
                     ClassId = Guid.NewGuid(),
                     RecclassName = recclassName
                 };
-                db.Recclasses.Add(recclass);
                 cache[recclassName] = recclass;
+                newRecclasses.Add(recclass);
             }
 
             return recclass.ClassId;
