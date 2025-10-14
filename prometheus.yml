@@ -1,0 +1,13 @@
+﻿scrape_configs:
+  - job_name: nasasyncservice.api
+    scrape_interval: 10s
+    scrape_timeout: 3s
+    static_configs:
+    - targets: 
+        - host.docker.internal:7188
+      labels:
+        app: nasasyncservice.local
+    - targets:
+        - nasasyncservice.api:80
+      labels:
+        app: nasasyncservice-docker

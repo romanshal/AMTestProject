@@ -1,0 +1,120 @@
+x-db-env: &db-env
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: postgres
+
+services:
+  meteoritesdb:
+    container_name: meteoritesdb
+    environment:
+      <<: *db-env
+      POSTGRES_DB: meteorites-db
+    restart: always
+    ports:
+        - "5432:5432"
+    volumes:
+      - postgres_meteorites:/var/lib/postgresql/data/
+
+  pgadmin:
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "postgres@gmail.com"
+      PGADMIN_DEFAULT_PASSWORD: "postgres"
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    ports:
+      - "5050:80"
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 1G
+
+  redis:
+    container_name: redis
+    restart: always
+    ports:
+      - '6379:6379'
+
+  opensearch-dashboards:
+    container_name: opensearch-dashboards
+    ports:
+      - 5601:5601
+    expose:
+      - '5601'
+    environment:
+      OPENSEARCH_HOSTS: '["https://opensearch-node:9200"]'
+
+  opensearch-node:
+    container_name: opensearch-node
+    environment:
+      - cluster.name=opensearch-cluster
+      - node.name=opensearch-node
+      - discovery.seed_hosts=opensearch-node
+      - cluster.initial_cluster_manager_nodes=opensearch-node
+      - bootstrap.memory_lock=true
+      - OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m
+      - OPENSEARCH_INITIAL_ADMIN_PASSWORD=KRfC6IIQhGqCRc2f
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    volumes:
+      - opensearch-data:/usr/share/opensearch/data
+    ports:
+      - 9200:9200
+      - 9600:9600
+
+  prometheus:
+    container_name: prometheus
+    ports:
+      - '9090:9090'
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus:/prometheus
+
+  grafana:
+    container_name: grafana
+    restart: unless-stopped
+    volumes:
+      - grafana:/var/lib/grafana
+    ports:
+      - '3000:3000'
+    depends_on:
+      - prometheus
+
+  jaeger:
+    container_name: 'jaeger'
+    environment:
+      COLLECTOR_ZIPKIN_HTTP_PORT: 9411
+    ports:
+      - '4317:4317'
+      - '16686:16686'
+
+  nasasyncservice.api:
+    container_name: nasasyncservice.api
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: "https://+:443;http://+:80"
+      "ConnectionStrings:NasaDbConnection": "Server=meteoritesdb;Port=5432;Database=meteorites-db;User Id=postgres;Password=postgres;"
+      "Redis:Host": redis
+      "Redis:Port": 6379
+      "Redis:Password": redispassword
+      "Redis:ExpirationTimeSeconds": 300
+      "OpenSearch:Urls": "https://opensearch-node:9200"
+      "OpenSearch:Login": "admin"
+      "OpenSearch:Password": "KRfC6IIQhGqCRc2f"
+      "Jaeger:Url": http://jaeger:4317
+    ports:
+      - "8000:80"
+      - "9000:443"
+    depends_on:
+      - redis
+      - meteoritesdb
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro

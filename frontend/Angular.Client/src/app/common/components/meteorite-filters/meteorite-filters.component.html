@@ -1,0 +1,61 @@
+<form [formGroup]="filterForm" class="filters">
+  <mat-form-field>
+    <mat-label>Year from</mat-label>
+
+    <input matInput [matDatepicker]="yearPickerFrom" formControlName="yearFrom" readonly>
+    <mat-datepicker-toggle matIconSuffix [for]="yearPickerFrom"></mat-datepicker-toggle>
+    <mat-datepicker #yearPickerFrom startView="multi-year"
+      (yearSelected)="chosenYearHandler($event, yearPickerFrom, 'yearFrom')" panelClass="year-only-datepicker">
+    </mat-datepicker>
+
+    <mat-error *ngIf="filterForm.get('yearFrom')?.hasError('minYear')">
+      "Year from" can't be less than 0
+    </mat-error>
+
+    <mat-error *ngIf="filterForm.get('yearFrom')?.hasError('maxYear')">
+      "Year from" can't be greater than current year
+    </mat-error>
+
+    <mat-error *ngIf="filterForm.hasError('yearRange')">
+      "Year from" can't be greater than "Year to"
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Year to</mat-label>
+
+    <input matInput [matDatepicker]="yearPickerTo" formControlName="yearTo" readonly>
+    <mat-datepicker-toggle matIconSuffix [for]="yearPickerTo"></mat-datepicker-toggle>
+    <mat-datepicker #yearPickerTo startView="multi-year"
+      (yearSelected)="chosenYearHandler($event, yearPickerTo, 'yearTo')" panelClass="year-only-datepicker">
+    </mat-datepicker>
+
+    <mat-error *ngIf="filterForm.get('yearTo')?.hasError('minYear')">
+      "Year to" can't be less than 0
+    </mat-error>
+
+    <mat-error *ngIf="filterForm.get('yearTo')?.hasError('maxYear')">
+      "Year to" can't be greater than current year
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Class</mat-label>
+
+    <input type="text" placeholder="Pick one" aria-label="RecClass" matInput formControlName="recclass"
+      [matAutocomplete]="auto">
+    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]="displayFn">
+      @for (rec of filteredRecclasses | async; track rec) {
+      <mat-option [value]="rec">{{rec.className}}</mat-option>
+      }
+    </mat-autocomplete>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Name</mat-label>
+    <input matInput formControlName="name" placeholder="Enter name...">
+  </mat-form-field>
+
+  <button mat-raised-button color="primary" (click)="onSearch()" [disabled]="filterForm.invalid">Search</button>
+  <button mat-button type="button" (click)="onReset()">Reset</button>
+</form>

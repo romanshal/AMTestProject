@@ -1,0 +1,39 @@
+version: '3.9'
+
+services:
+  meteoritesdb:
+    image: postgres
+
+  pgadmin:
+    image: dpage/pgadmin4
+
+  redis:
+    image: redis:latest
+
+  opensearch-dashboards:
+    image: opensearchproject/opensearch-dashboards:latest
+
+  opensearch-node:
+    image: opensearchproject/opensearch:latest
+
+  prometheus:
+    image: prom/prometheus
+
+  grafana:
+    image: grafana/grafana
+
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+
+  nasasyncservice.api:
+    image: ${DOCKER_REGISTRY-}nasasyncserviceapi
+    build:
+      context: src
+      dockerfile: NasaSyncService/NasaSyncService.API/Dockerfile
+
+volumes:
+   postgres_meteorites:
+   pgadmin:
+   opensearch-data:
+   prometheus:
+   grafana:

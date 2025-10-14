@@ -1,0 +1,7 @@
+<app-meteorite-filters (search)="onSearch($event)"></app-meteorite-filters>
+
+<div class="spinner-overlay" *ngIf="isLoading">
+  <mat-spinner></mat-spinner>
+</div>
+
+<app-meteorite-table *ngIf="!isLoading" [data]="data" (sortChange)="onSortChange($event)"></app-meteorite-table>

@@ -1,13 +1,69 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36414.22 d17.14
+VisualStudioVersion = 17.14.36414.22
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{36D591C7-65C7-A0D1-1CBC-10CDE441BDC8}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NasaSyncService", "NasaSyncService", "{2E38F6DF-47F9-4B24-8E3B-4E70CEC736EE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NasaSyncService.API", "src\NasaSyncService\NasaSyncService.API\NasaSyncService.API.csproj", "{D0073863-7934-4E18-BB13-20C369461F3E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NasaSyncService.Domain", "src\NasaSyncService\NasaSyncService.Domain\NasaSyncService.Domain.csproj", "{0A3988DE-DBC7-4E5B-88EA-65A02692B7F1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NasaSyncService.Application", "src\NasaSyncService\NasaSyncService.Application\NasaSyncService.Application.csproj", "{0A635553-3085-45E7-909D-4AEFB8D8B070}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NasaSyncService.Infrastructure", "src\NasaSyncService\NasaSyncService.Infrastructure\NasaSyncService.Infrastructure.csproj", "{3476E24E-C9B0-4E0C-B08D-7427AD93D542}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{81DDED9D-158B-E303-5F62-77A2896D2A5A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "frontend", "frontend", "{C81610ED-49D5-4F30-AF73-90EA26C3370E}"
+EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "Angular.Client", "frontend\Angular.Client\Angular.Client.esproj", "{08E599C2-3E8B-E618-53DD-EA8F90551A5C}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D0073863-7934-4E18-BB13-20C369461F3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0073863-7934-4E18-BB13-20C369461F3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0073863-7934-4E18-BB13-20C369461F3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0073863-7934-4E18-BB13-20C369461F3E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A3988DE-DBC7-4E5B-88EA-65A02692B7F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A3988DE-DBC7-4E5B-88EA-65A02692B7F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A3988DE-DBC7-4E5B-88EA-65A02692B7F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A3988DE-DBC7-4E5B-88EA-65A02692B7F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A635553-3085-45E7-909D-4AEFB8D8B070}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A635553-3085-45E7-909D-4AEFB8D8B070}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A635553-3085-45E7-909D-4AEFB8D8B070}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A635553-3085-45E7-909D-4AEFB8D8B070}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3476E24E-C9B0-4E0C-B08D-7427AD93D542}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3476E24E-C9B0-4E0C-B08D-7427AD93D542}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3476E24E-C9B0-4E0C-B08D-7427AD93D542}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3476E24E-C9B0-4E0C-B08D-7427AD93D542}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81DDED9D-158B-E303-5F62-77A2896D2A5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81DDED9D-158B-E303-5F62-77A2896D2A5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81DDED9D-158B-E303-5F62-77A2896D2A5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81DDED9D-158B-E303-5F62-77A2896D2A5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08E599C2-3E8B-E618-53DD-EA8F90551A5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08E599C2-3E8B-E618-53DD-EA8F90551A5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08E599C2-3E8B-E618-53DD-EA8F90551A5C}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{08E599C2-3E8B-E618-53DD-EA8F90551A5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08E599C2-3E8B-E618-53DD-EA8F90551A5C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08E599C2-3E8B-E618-53DD-EA8F90551A5C}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2E38F6DF-47F9-4B24-8E3B-4E70CEC736EE} = {36D591C7-65C7-A0D1-1CBC-10CDE441BDC8}
+		{D0073863-7934-4E18-BB13-20C369461F3E} = {2E38F6DF-47F9-4B24-8E3B-4E70CEC736EE}
+		{0A3988DE-DBC7-4E5B-88EA-65A02692B7F1} = {2E38F6DF-47F9-4B24-8E3B-4E70CEC736EE}
+		{0A635553-3085-45E7-909D-4AEFB8D8B070} = {2E38F6DF-47F9-4B24-8E3B-4E70CEC736EE}
+		{3476E24E-C9B0-4E0C-B08D-7427AD93D542} = {2E38F6DF-47F9-4B24-8E3B-4E70CEC736EE}
+		{08E599C2-3E8B-E618-53DD-EA8F90551A5C} = {C81610ED-49D5-4F30-AF73-90EA26C3370E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7DA82DA7-347B-4FE7-8F27-C91C61CBDB57}

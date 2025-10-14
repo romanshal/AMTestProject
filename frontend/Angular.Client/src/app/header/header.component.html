@@ -1,0 +1,16 @@
+<header class="header">
+  <div class="header__logo">
+    Meteor
+  </div>
+
+  <nav class="header__nav" *ngIf="navItems.length > 0">
+    <a
+      *ngFor="let item of navItems"
+      [routerLink]="item.route"
+      routerLinkActive="active"
+      class="header__link"
+    >
+      {{ item.label }}
+    </a>
+  </nav>
+</header>
