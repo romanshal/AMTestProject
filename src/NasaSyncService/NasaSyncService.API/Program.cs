@@ -93,6 +93,8 @@ app.UseExeptionWrappingMiddleware();
 
 app.MapControllers();
 
+app.MapPrometheusScrapingEndpoint();
+
 app.UseHealthChecks("/hc", new HealthCheckOptions
 {
     Predicate = _ => true,
